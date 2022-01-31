@@ -1,5 +1,5 @@
 # second_house_crawler
-爬取广州地区链家二手房代码，使用scraoy框架
+爬取广州地区链家二手房代码，使用scrapy框架
 ### scrapy
 #### 中间件
 - 代理中间件
