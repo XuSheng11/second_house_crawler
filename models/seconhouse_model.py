@@ -93,4 +93,5 @@ class GuangZhouCommunityInfo(db.Entity):
     pictures = Optional(Json, nullable=True)
 
 
+# 映射到数据库，不直接建表
 db.generate_mapping(create_tables=False)
