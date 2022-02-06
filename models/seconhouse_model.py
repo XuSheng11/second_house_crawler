@@ -42,28 +42,28 @@ class GuangZhouSecondHouseCommonInfo(db.Entity):
     house_id = PrimaryKey(str)
     title = Required(str)
     type = Required(str)
-    direction = Optional(str)
-    elevator = Optional(str)
-    floor_num = Optional(int)
-    floor_height = Optional(str)
+    direction = Optional(str, nullable=True)
+    elevator = Optional(str, nullable=True)
+    floor_num = Optional(int, nullable=True)
+    floor_height = Optional(str, nullable=True)
     community = Required(str)
     community_id = Required(str)
     layout = Required(str)
-    total_price = Optional(int)
-    unit_price = Optional(int)
-    renovation = Optional(str)
-    size = Optional(float)
-    year = Optional(int)
+    total_price = Optional(int, nullable=True)
+    unit_price = Optional(int, nullable=True)
+    renovation = Optional(str, nullable=True)
+    size = Optional(float, nullable=True)
+    year = Optional(int, nullable=True)
 
 
 # 广州二手房特殊信息表
 class GuangZhouSecondHouseSpecialInfo(db.Entity):
     _table_ = 'guangzhou_secondhouse_special_info'
     house_id = PrimaryKey(str)
-    features = Optional(Json)
-    layout_detail = Optional(Json)
-    pictures = Optional(Json)
-    trade = Optional(Json)
+    features = Optional(Json, nullable=True)
+    layout_detail = Optional(Json, nullable=True)
+    pictures = Optional(Json, nullable=True)
+    trade = Optional(Json, nullable=True)
 
 
 # 广州二手房地址信息表
@@ -74,8 +74,23 @@ class GuangZhouSecondHouseAddressInfo(db.Entity):
     district_cn = Required(str)
     region_cn = Required(str)
     region_py = Required(str)
-    station_id = Optional(str)
-    subway_id = Optional(str)
+    station_id = Optional(str, nullable=True)
+    subway_id = Optional(str, nullable=True)
+
+
+# 广州二手房小区信息表
+class GuangZhouCommunityInfo(db.Entity):
+    _table_ = 'guangzhou_community_info'
+    community_id = PrimaryKey(str)
+    name = Required(str)
+    address = Required(str)
+    district_py = Required(str)
+    district_cn = Required(str)
+    region_cn = Required(str)
+    region_py = Required(str)
+    unit_price = Optional(str, nullable=True)
+    features = Optional(Json, nullable=True)
+    pictures = Optional(Json, nullable=True)
 
 
 db.generate_mapping(create_tables=False)
