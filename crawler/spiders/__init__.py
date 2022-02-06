@@ -23,6 +23,15 @@ class LianJiaSpider(scrapy.Spider):
         :return:
         """
 
+    def from_url(self, url):
+        """
+        从链家url获取相关信息
+        :param url:
+        :return: 地区id，地铁线路id
+        """
+        id = url.split('/')[-2]
+        return id
+
 
 class LianJiaHouseSpider(LianJiaSpider):
     def parse_house(self, response):
@@ -147,12 +156,3 @@ class LianJiaHouseSpider(LianJiaSpider):
             for i in range(len(labels)):
                 special_info['trade'][labels[i]] = contents[i].strip()
         return special_info
-
-    def from_url(self, url):
-        """
-        从链家url获取相关信息
-        :param url:
-        :return: 地区id，地铁线路id
-        """
-        id = url.split('/')[-2]
-        return id

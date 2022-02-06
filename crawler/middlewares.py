@@ -16,7 +16,7 @@ class RandomUserAgentMiddleware():
 
     def process_request(self, request, spider):
         def get_ua():
-            return getattr(self.ua, 'random')
+            return getattr(self.ua, 'chrome')
 
         request.headers['User-Agent'] = get_ua()
 
@@ -26,10 +26,10 @@ class ProxyMiddleware():
         request.meta['proxy'] = 'https://127.0.0.1:7890'
 
 
-class FormatUrlMiddleware():
-    def process_request(self, request, spider):
-        if urlparse(request.url).netloc != 'gz.lianjia.com':
-            logging.info('Process special url: %s' %(request.url))
-            id = request.url.split('/')[-1][:-5]
-            url = 'https://gz.lianjia.com/ershoufang/%s.html' % (id)
-            request._set_url(url=url)
+# class FormatUrlMiddleware():
+#     def process_request(self, request, spider):
+#         if urlparse(request.url).netloc != 'gz.lianjia.com':
+#             logging.info('Process special url: %s' %(request.url))
+#             id = request.url.split('/')[-1][:-5]
+#             url = 'https://gz.lianjia.com/ershoufang/%s.html' % (id)
+#             request._set_url(url=url)

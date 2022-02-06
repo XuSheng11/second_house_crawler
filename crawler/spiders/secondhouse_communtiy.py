@@ -1,30 +1,48 @@
-from models.seconhouse_model import GuangZhouRegion
+from models.seconhouse_model import GuangZhouSecondHouseCommonInfo,GuangZhouCommunityInfo
+from crawler.spiders import LianJiaSpider
+from crawler.items import CommunityCrawlerItem
 
 from pony.orm import select, db_session
-from scrapy.spiders import Spider
 from scrapy import Request
 
 
-class CommunitySpider(Spider):
+class CommunitySpider(LianJiaSpider):
     name = 'community_spider'
-    allowed_domains = ['gz.lianjia.com']
-    url = 'https://gz.lianjia.com/xiaoqu/'
+    url = 'https://gz.lianjia.com/xiaoqu'
 
     @db_session
-    def get_sql_result(self):
-        results = [region for region in select(r.region_py for r in GuangZhouRegion)]
+    def send_tasks(self):
+        results = []
+        for community in select(c.community_id for c in GuangZhouSecondHouseCommonInfo):
+            if not GuangZhouCommunityInfo.get(community_id=community):
+                results.append(community)
         return results
 
     def start_requests(self):
-        for region in ['tianhe']:
-            print(region)
-            yield Request(url=self.url + region, callback=self.parse_community_list)
+        for community in self.send_tasks():
+            yield Request(url='%s/%s/' %(self.url, community), callback=self.parse_community)
 
-    def parse_community_list(self, response):
-        urls = response.xpath('//div[@class="page-box fr"]/div/a/@href').get()
-        print(urls)
-        for url in urls:
-            yield Request(url=url, callback=self.parse_community_list)
+    def parse_community(self, response):
+        item = CommunityCrawlerItem()
+        item['community_id'] = self.from_url(response.request.url)
+        item['name'] = response.xpath('//h1[@class="detailTitle"]/text()').get()
+        item['address'] = response.xpath('//div[@class="detailDesc"]/text()').get()
+        item['district_cn'] = response.xpath('//div[@class="fl l-txt"]/a[3]/text()').get()[:-2]
+        item['region_cn'] = response.xpath('//div[@class="fl l-txt"]/a[4]/text()').get()[:-2]
 
-    def parse_community(self):
-        pass
+        district_url = response.xpath('//div[@class="fl l-txt"]/a[3]/@href').get()
+        region_url = response.xpath('//div[@class="fl l-txt"]/a[4]/@href').get()
+        item['district_py'] = self.from_url(district_url)
+        item['region_py'] = self.from_url(region_url)
+
+        item['unit_price'] = response.xpath('//span[@class="xiaoquUnitPrice"]/text()').get()
+
+        labels = response.xpath('//span[@class="xiaoquInfoLabel"]//text()').extract()
+        contents = response.xpath('//span[@class="xiaoquInfoContent"]//text()').extract()
+        if labels:
+            item['features'] = {}
+            for i in range(len(labels)):
+                item['features'][labels[i]] = contents[i].strip()
+
+        item['pictures'] = response.xpath('//ol[@id="overviewThumbnail"]/li/@data-src').extract()
+        yield item

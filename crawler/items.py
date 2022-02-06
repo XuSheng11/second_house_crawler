@@ -38,4 +38,13 @@ class SecondHouseSpecialInfoItem(scrapy.Item):
 
 
 class CommunityCrawlerItem(scrapy.Item):
-    pass
+    community_id = scrapy.Field()
+    name = scrapy.Field()
+    address = scrapy.Field()
+    district_py = scrapy.Field()
+    district_cn = scrapy.Field()
+    region_cn = scrapy.Field()
+    region_py = scrapy.Field()
+    unit_price = scrapy.Field()
+    features = scrapy.Field()
+    pictures = scrapy.Field()

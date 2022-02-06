@@ -1,8 +1,8 @@
 import logging
 
-from crawler.items import SecondHouseCommonInfoItem, SecondHouseSpecialInfoItem
+from crawler.items import SecondHouseCommonInfoItem, SecondHouseSpecialInfoItem, SecondHouseAddressInfoItem
 from models.seconhouse_model import GuangZhouSecondHouseCommonInfo, GuangZhouSecondHouseSpecialInfo, \
-    GuangZhouSecondHouseAddressInfo, db
+    GuangZhouSecondHouseAddressInfo, GuangZhouCommunityInfo, db
 
 from pony.orm import db_session
 
@@ -19,7 +19,7 @@ class SecondHouseCrawlerPipeline:
             if not GuangZhouSecondHouseSpecialInfo.get(house_id=data['house_id']):
                 GuangZhouSecondHouseSpecialInfo(**data)
                 logging.info('The speccial_info of Second house %s has been stored' % (data['house_id']))
-        else:
+        elif isinstance(item, SecondHouseAddressInfoItem):
             if not GuangZhouSecondHouseAddressInfo.get(house_id=data['house_id']):
                 # 当subway_id 为空时会报外键出错（会插入‘’空字符串），只能通过原始sql插入（不插入subway_id）
                 table = 'guangzhou_secondhouse_address_info'
@@ -28,5 +28,8 @@ class SecondHouseCrawlerPipeline:
                 sql = 'insert into  %s (%s) values(%s)' % (table, fields, contents)
                 db.execute(sql=sql)
                 logging.info('The address_info of Second house %s has been stored' % (data['house_id']))
-
+        else:
+            if not GuangZhouCommunityInfo.get(community_id=data['community_id']):
+                GuangZhouCommunityInfo(**data)
+                logging.info('Crawled Community %s' %(data['community_id']))
         return item
