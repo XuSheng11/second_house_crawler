@@ -1,5 +1,3 @@
-import logging
-
 from models.seconhouse_model import GuangZhouRegion
 
 from pony.orm import select, db_session

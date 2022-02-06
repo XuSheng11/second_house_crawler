@@ -139,16 +139,5 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# ym-crawler-ccs
-airflow.cfg
-airflow-webserver.pid
-unittests.cfg
-logs/
-crawler/*/*settings.py
-config/*config.py
 *test*
-config/airflow_conf.env
-common/mapping.py
-dataparser/*/*settings.py
-scheduler/deployedDags/
-temp
+settings.py
