@@ -10,7 +10,8 @@ class SecondHouseIdSpider(LianJiaHouseSpider):
 
     @db_session
     def send_tasks(self):
-        sql = 'select c.house_id from guangzhou_secondhouse_common_info c left join guangzhou_secondhouse_address_info a on c.house_id=a.house_id where a.house_id is NULL'
+        # sql = 'select house_id from guangzhou_secondhouse_special_info where base is NULL'
+        sql = 'select s.house_id from guangzhou_secondhouse_special_info s left join guangzhou_secondhouse_common_info c on s.house_id=c.house_id where c.house_id is NULL'
         results = db.execute(sql=sql).fetchall()
         task = [house[0] for house in results]
         print(task)

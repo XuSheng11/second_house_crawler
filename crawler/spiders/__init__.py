@@ -2,7 +2,7 @@ import re
 
 import scrapy
 
-from crawler.items import SecondHouseCommonInfoItem, SecondHouseAddressInfoItem, SecondHouseSpecialInfoItem
+from crawler.items import SecondHouseCommonInfoItem, SecondHouseSpecialInfoItem
 
 
 class LianJiaSpider(scrapy.Spider):
@@ -42,33 +42,9 @@ class LianJiaHouseSpider(LianJiaSpider):
         """
         house_id = response.request.url.split('/')[-1][:-5]
         common_info = self.parse_common_info(response=response, house_id=house_id)
-        address_info = self.parse_address_info(response=response, house_id=house_id)
         special_info = self.parse_special_info(response=response, house_id=house_id)
         yield common_info
-        yield address_info
         yield special_info
-
-    def parse_address_info(self, response, house_id):
-        """
-        解析房源地址信息
-        :param response: 响应
-        :return: scrapy 房源地址信息item
-        """
-        address_info = SecondHouseAddressInfoItem()
-        address_info['house_id'] = house_id
-        district_url = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[1]/@href').get()
-        address_info['district_py'] = self.from_url(district_url)
-        address_info['district_cn'] = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[1]/text()').get()
-        address_info['region_cn'] = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[2]/text()').get()
-
-        region_url = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[2]/@href').get()
-        address_info['region_py'] = self.from_url(region_url)
-        station_url = response.xpath('//div[@class="areaName"]/a/@href').get()
-        if station_url:
-            address_info['station_id'] = self.from_url(station_url)
-            address_info['subway_id'] = address_info['station_id'].split('s')[0]
-
-        return address_info
 
     def parse_common_info(self, response, house_id):
         """
@@ -79,6 +55,9 @@ class LianJiaHouseSpider(LianJiaSpider):
         common_info = SecondHouseCommonInfoItem()
         common_info['house_id'] = house_id
         common_info['type'] = response.xpath('//div[@class="transaction"]//ul/li[4]/span[2]/text()').get()
+        cover = response.xpath('//div[@class="content-wrapper housePic"]//img//@src').get()
+        if cover:
+            common_info['cover'] = cover.replace('710x400.jpg','296x216.jpg')
         elevator = response.xpath('//div[@class="base"]/div[@class="content"]/ul/li[11]/text()').get()
         if elevator:
             common_info['elevator'] = elevator
@@ -108,6 +87,18 @@ class LianJiaHouseSpider(LianJiaSpider):
         year = response.xpath('//div[@class="houseInfo"]/div[@class="area"]/div[2]/text()').get()[:4]
         if year.isdigit():
             common_info['year'] = year
+        # 解析地址信息
+        district_url = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[1]/@href').get()
+        common_info['district_py'] = self.from_url(district_url)
+        common_info['district_cn'] = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[1]/text()').get()
+        common_info['region_cn'] = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[2]/text()').get()
+
+        region_url = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[2]/@href').get()
+        common_info['region_py'] = self.from_url(region_url)
+        station_url = response.xpath('//div[@class="areaName"]/a/@href').get()
+        if station_url:
+            common_info['station_id'] = self.from_url(station_url)
+            common_info['subway_id'] = common_info['station_id'].split('s')[0]
         return common_info
 
     def parse_special_info(self, response, house_id):
@@ -116,9 +107,18 @@ class LianJiaHouseSpider(LianJiaSpider):
         :param response: 响应
         :return: scrapy 房源特殊信息item
         """
-        # 房源布局的详细信息
+
         special_info = SecondHouseSpecialInfoItem()
         special_info['house_id'] = house_id
+        # 房源基本属性
+        labels = response.xpath('//div[@class="base"]//ul/li//span[1]/text()').extract()
+        contents = response.xpath('//div[@class="base"]//ul/li/text()').extract()
+        if labels:
+            special_info['base'] = {}
+            for i in range(len(labels)):
+                special_info['base'][labels[i]] = contents[i].strip()
+
+        # 房源布局的详细信息
         info_list = response.xpath('//div[@class="col"]/text()').extract()
         if info_list:
             special_info['layout_detail'] = [

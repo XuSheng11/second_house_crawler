@@ -1,19 +1,10 @@
 import scrapy
 
 
-class SecondHouseAddressInfoItem(scrapy.Item):
-    house_id = scrapy.Field()
-    district_py = scrapy.Field()
-    district_cn = scrapy.Field()
-    region_cn = scrapy.Field()
-    region_py = scrapy.Field()
-    subway_id = scrapy.Field()
-    station_id = scrapy.Field()
-
-
 class SecondHouseCommonInfoItem(scrapy.Item):
     house_id = scrapy.Field()
     title = scrapy.Field()
+    cover = scrapy.Field()
     type = scrapy.Field()
     direction = scrapy.Field()
     elevator = scrapy.Field()
@@ -27,6 +18,12 @@ class SecondHouseCommonInfoItem(scrapy.Item):
     renovation = scrapy.Field()
     size = scrapy.Field()
     year = scrapy.Field()
+    district_py = scrapy.Field()
+    district_cn = scrapy.Field()
+    region_cn = scrapy.Field()
+    region_py = scrapy.Field()
+    subway_id = scrapy.Field()
+    station_id = scrapy.Field()
 
 
 class SecondHouseSpecialInfoItem(scrapy.Item):
@@ -35,6 +32,7 @@ class SecondHouseSpecialInfoItem(scrapy.Item):
     layout_detail = scrapy.Field()
     pictures = scrapy.Field()
     trade = scrapy.Field()
+    base = scrapy.Field()
 
 
 class CommunityCrawlerItem(scrapy.Item):
