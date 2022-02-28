@@ -88,13 +88,9 @@ class LianJiaHouseSpider(LianJiaSpider):
         if year.isdigit():
             common_info['year'] = year
         # 解析地址信息
-        district_url = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[1]/@href').get()
-        common_info['district_py'] = self.from_url(district_url)
         common_info['district_cn'] = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[1]/text()').get()
         common_info['region_cn'] = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[2]/text()').get()
 
-        region_url = response.xpath('//div[@class="areaName"]/span[@class="info"]/a[2]/@href').get()
-        common_info['region_py'] = self.from_url(region_url)
         station_url = response.xpath('//div[@class="areaName"]/a/@href').get()
         if station_url:
             common_info['station_id'] = self.from_url(station_url)

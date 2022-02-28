@@ -15,7 +15,7 @@ class SecondHouseSpiderRegion(LianJiaHouseSpider):
     def send_tasks(self):
         # regions = ['lujing']
         # 天河区所有的区域，使用lambda进行筛选
-        regions = [region.region_py for region in GuangZhouRegion.select(lambda r: r.district_py == 'haizhu')]
+        regions = [region.region_py for region in GuangZhouRegion.select(lambda r: r.district_py == 'huadou' or r.district_py=='nansha')]
         # regions = [region.region_py for region in select(r for r in GuangZhouRegion)]
 
         return regions

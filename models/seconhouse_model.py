@@ -55,10 +55,8 @@ class GuangZhouSecondHouseCommonInfo(db.Entity):
     renovation = Optional(str, nullable=True)
     size = Optional(float, nullable=True)
     year = Optional(int, nullable=True)
-    district_py = Required(str)
     district_cn = Required(str)
     region_cn = Required(str)
-    region_py = Required(str)
     station_id = Optional(str, nullable=True)
     subway_id = Optional(str, nullable=True)
 

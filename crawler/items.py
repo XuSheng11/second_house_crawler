@@ -18,10 +18,8 @@ class SecondHouseCommonInfoItem(scrapy.Item):
     renovation = scrapy.Field()
     size = scrapy.Field()
     year = scrapy.Field()
-    district_py = scrapy.Field()
     district_cn = scrapy.Field()
     region_cn = scrapy.Field()
-    region_py = scrapy.Field()
     subway_id = scrapy.Field()
     station_id = scrapy.Field()
 
