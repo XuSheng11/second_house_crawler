@@ -29,12 +29,6 @@ class CommunitySpider(LianJiaSpider):
         item['address'] = response.xpath('//div[@class="detailDesc"]/text()').get()
         item['district_cn'] = response.xpath('//div[@class="fl l-txt"]/a[3]/text()').get()[:-2]
         item['region_cn'] = response.xpath('//div[@class="fl l-txt"]/a[4]/text()').get()[:-2]
-
-        district_url = response.xpath('//div[@class="fl l-txt"]/a[3]/@href').get()
-        region_url = response.xpath('//div[@class="fl l-txt"]/a[4]/@href').get()
-        item['district_py'] = self.from_url(district_url)
-        item['region_py'] = self.from_url(region_url)
-
         item['unit_price'] = response.xpath('//span[@class="xiaoquUnitPrice"]/text()').get()
 
         labels = response.xpath('//span[@class="xiaoquInfoLabel"]//text()').extract()
