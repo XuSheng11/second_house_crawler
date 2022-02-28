@@ -7,7 +7,7 @@ __pycache__/
 .DS_Store
 
 # C extensions
-
+*.so
 
 # Distribution / packaging
 .Python
@@ -140,4 +140,3 @@ dmypy.json
 cython_debug/
 
 *test*
-settings.py
