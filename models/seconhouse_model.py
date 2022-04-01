@@ -1,11 +1,6 @@
-from crawler.settings import MYSQL_SETTINGS
+from config import MYSQL_SETTINGS
 
-from pony.orm import Database
-from pony.orm import Optional
-from pony.orm import PrimaryKey
-from pony.orm import Required
-from pony.orm import Json
-from pony.orm import set_sql_debug
+from pony.orm import *
 
 db = Database()
 db.bind(
@@ -24,8 +19,8 @@ class GuangZhouRegion(db.Entity):
     _table_ = 'guangzhou_region'
     region_py = Required(str)
     region_cn = Required(str)
-    district_py = Required(str)
-    PrimaryKey(region_py, district_py)
+    district_cn = Required(str)
+    PrimaryKey(region_py, district_cn)
 
 
 # 广州地铁站表
@@ -34,6 +29,13 @@ class GuangZhouSubwayStation(db.Entity):
     id = PrimaryKey(str)
     name = Required(str)
     subway_id = Required(str)
+
+
+# 广州地铁表
+class GuangZhouSubway(db.Entity):
+    _table_ = 'guangzhou_subway'
+    id = PrimaryKey(str)
+    name = Required(str)
 
 
 # 广州二手房普通信息表
