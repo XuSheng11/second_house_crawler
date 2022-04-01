@@ -1,4 +1,4 @@
-from config import MYSQL_SETTINGS
+from crawler.settings import MYSQL_SETTINGS
 
 from pony.orm import *
 
